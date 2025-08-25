@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeepAChangelog.IO", "KeepAChangelog.IO\KeepAChangelog.IO.csproj", "{B0C71055-6B0E-4ED3-9ED8-51D10FDDEC78}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeepAChangelog.IO.Tests", "KeepAChangelog.IO.Tests\KeepAChangelog.IO.Tests.csproj", "{40F50919-2868-457A-AA65-1D0BD3BD22ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,12 @@ Global
 		{B0C71055-6B0E-4ED3-9ED8-51D10FDDEC78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0C71055-6B0E-4ED3-9ED8-51D10FDDEC78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0C71055-6B0E-4ED3-9ED8-51D10FDDEC78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40F50919-2868-457A-AA65-1D0BD3BD22ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40F50919-2868-457A-AA65-1D0BD3BD22ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40F50919-2868-457A-AA65-1D0BD3BD22ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40F50919-2868-457A-AA65-1D0BD3BD22ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
