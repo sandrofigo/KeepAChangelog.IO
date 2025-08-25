@@ -5,10 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
+namespace KeepAChangelog.IO;
+
 public class Changelog
 {
     public ChangelogTextSection Header;
-    public List<ChangelogReleaseSection> Sections = new List<ChangelogReleaseSection>();
+    public List<ChangelogReleaseSection> Sections = [];
 
     public const string UnreleasedVersionString = "Unreleased";
 
@@ -119,86 +121,9 @@ public class Changelog
 
         foreach (ChangelogReleaseSection section in Sections)
         {
-            stringBuilder.AppendLine(Sections.ToString());
+            stringBuilder.AppendLine(section.ToString());
         }
 
         return stringBuilder.ToString();
     }
-}
-
-public class ChangelogReleaseSection
-{
-    public string Version { get; set; }
-    public string ReleaseDate { get; set; }
-
-    public Dictionary<EntryType, List<string>> Entries { get; set; } = new Dictionary<EntryType, List<string>>
-    {
-        { EntryType.Added, new List<string>() },
-        { EntryType.Changed, new List<string>() },
-        { EntryType.Deprecated, new List<string>() },
-        { EntryType.Removed, new List<string>() },
-        { EntryType.Fixed, new List<string>() },
-        { EntryType.Security, new List<string>() }
-    };
-
-    public bool IsEmpty()
-    {
-        return Entries.All(e => e.Value.Count == 0);
-    }
-
-    public override string ToString()
-    {
-        var lines = new List<string>();
-
-        lines.Add($"## [{Version}]{(string.IsNullOrWhiteSpace(ReleaseDate) ? "" : $" - {ReleaseDate}")}");
-        lines.Add("");
-
-        foreach (var group in Entries)
-        {
-            if (group.Value.Count > 0)
-            {
-                lines.Add($"### {group.Key}");
-                lines.Add("");
-                foreach (string s in group.Value)
-                    lines.Add($"- {s}");
-                lines.Add("");
-            }
-        }
-
-        var stringBuilder = new StringBuilder();
-
-        foreach (string line in lines)
-        {
-            stringBuilder.AppendLine(line);
-        }
-
-        return stringBuilder.ToString();
-    }
-}
-
-public class ChangelogTextSection
-{
-    public List<string> Lines { get; } = new List<string>();
-
-    public override string ToString()
-    {
-        var stringBuilder = new StringBuilder();
-
-        foreach (string line in Lines)
-        {
-            stringBuilder.AppendLine(line);
-        }
-
-        return stringBuilder.ToString();
-    }
-}
-
-public enum EntryType
-{
-    Added,
-    Changed,
-    Deprecated,
-    Removed,
-    Fixed,
-    Security,
 }
