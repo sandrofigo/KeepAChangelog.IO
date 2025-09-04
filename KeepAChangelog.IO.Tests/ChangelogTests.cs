@@ -33,11 +33,18 @@ public class ChangelogTests
         var changelog = Changelog.Create();
         return Verify(changelog.ToString()).UseFileName("empty_changelog_from_code");
     }
-    
+
     [Fact]
     public Task ToString_ChangelogWithRandomCategoryOrder_OutputIsOrdered()
     {
         Changelog changelog = Changelog.FromFile("Data/valid_changelog_with_random_category_order.txt");
         return Verify(changelog.ToString()).UseFileName("valid_changelog_with_random_category_order");
+    }
+
+    [Fact]
+    public Task ToString_ChangelogWithRandomVersionOrder_OutputIsOrdered()
+    {
+        Changelog changelog = Changelog.FromFile("Data/valid_changelog_with_random_version_order.txt");
+        return Verify(changelog.ToString()).UseFileName("valid_changelog_with_random_version_order");
     }
 }

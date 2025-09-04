@@ -9,6 +9,7 @@ public record Category
     internal const string Symbol = "### ";
 
     public EntryType Type { get; set; }
+
     public List<Entry> Entries { get; set; } = [];
 
     public override string ToString()

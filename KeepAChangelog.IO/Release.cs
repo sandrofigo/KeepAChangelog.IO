@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace KeepAChangelog.IO;
 
-public record Release
+public record Release : IComparable<Release>
 {
     internal const string Symbol = "## ";
     public const string UnreleasedVersionString = "Unreleased";
@@ -30,5 +31,30 @@ public record Release
         stringBuilder.Append(string.Join(Changelog.DoubleNewLine, Categories.OrderBy(category => category.Type)));
 
         return stringBuilder.ToString();
+    }
+
+    public int CompareTo(Release? other)
+    {
+        if (ReferenceEquals(this, other))
+            return 0;
+
+        if (other is null)
+            return 1;
+
+        if (IsUnreleased && other.IsUnreleased)
+            return 0;
+
+        if (IsUnreleased)
+            return 1;
+
+        if (other.IsUnreleased)
+            return -1;
+
+        int releaseDateComparison = Comparer<ReleaseDate?>.Default.Compare(ReleaseDate, other.ReleaseDate);
+        if (releaseDateComparison != 0)
+            return releaseDateComparison;
+
+        int versionComparison = string.Compare(Version, other.Version, StringComparison.Ordinal);
+        return versionComparison;
     }
 }

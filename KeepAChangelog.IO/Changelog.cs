@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -60,7 +61,7 @@ public class Changelog
         return Parse(lines);
     }
 
-    private static Changelog Parse(IEnumerable<string> lines)
+    public static Changelog Parse(IEnumerable<string> lines)
     {
         var changelog = new Changelog();
 
@@ -223,12 +224,12 @@ public class Changelog
         stringBuilder.AppendLine(Description);
         stringBuilder.AppendLine();
 
-        stringBuilder.Append(string.Join(DoubleNewLine, Releases));
+        stringBuilder.Append(string.Join(DoubleNewLine, Releases.OrderByDescending(release => release)));
 
         if (VersionLinks.Count > 0)
             stringBuilder.Append(DoubleNewLine);
 
-        stringBuilder.Append(string.Join(Environment.NewLine, VersionLinks));
+        stringBuilder.Append(string.Join(Environment.NewLine, VersionLinks.OrderByDescending(link => link)));
 
         return stringBuilder.ToString();
     }
