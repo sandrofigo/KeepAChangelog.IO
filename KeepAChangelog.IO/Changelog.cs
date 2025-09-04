@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -30,9 +30,24 @@ public class Changelog
                                                        and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
                                                        """;
 
+    /// <summary>
+    /// The title of the changelog, which appears at the top of the file.
+    /// </summary>
     public string Title { get; set; } = "";
+
+    /// <summary>
+    /// The description section of the changelog, which appears below the title and above the first release.
+    /// </summary>
     public string Description { get; set; } = "";
+
+    /// <summary>
+    /// The list of releases in the changelog.
+    /// </summary>
     public readonly List<Release> Releases = [];
+
+    /// <summary>
+    /// The list of version links at the bottom of the changelog.
+    /// </summary>
     public readonly List<VersionLink> VersionLinks = [];
 
     private Changelog()
@@ -54,9 +69,12 @@ public class Changelog
         return changelog;
     }
 
-    public static Changelog FromFile(string changelogFilePath)
+    /// <summary>
+    /// Parses a changelog from a file at the specified path.
+    /// </summary>
+    public static Changelog FromFile(string filePath)
     {
-        string[] lines = File.ReadAllLines(changelogFilePath);
+        string[] lines = File.ReadAllLines(filePath);
 
         return Parse(lines);
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,11 +12,27 @@ public record Release : IComparable<Release>
     public const string YankedSymbol = "[YANKED]";
 
     public string Version { get; set; } = UnreleasedVersionString;
+
+    /// <summary>
+    /// The release date in YYYY-MM-DD format.
+    /// </summary>
+    /// <remarks>
+    /// If null, the release is considered "Unreleased".
+    /// </remarks>
     public ReleaseDate? ReleaseDate { get; set; }
+
     public List<Category> Categories { get; set; } = [];
 
     public bool IsReleased => ReleaseDate is not null;
     public bool IsUnreleased => !IsReleased;
+
+
+    /// <summary>
+    /// Marks the release as yanked and appends the "[YANKED]" label after the release date.
+    /// </summary>
+    /// <remarks>
+    /// Should be set to True for releases that have been removed from distribution (e.g. due to a critical issue or security vulnerability).
+    /// </remarks>
     public bool IsYanked { get; set; }
 
     public override string ToString()
