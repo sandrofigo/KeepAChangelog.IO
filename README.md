@@ -5,7 +5,7 @@
   <br>
 </h1>
 
-A .NET library for reading and writing files in the https://keepachangelog.com/ format.
+<h4 align="center">A .NET library for reading and writing files in the <a href="https://keepachangelog.com/" target="_blank">https://keepachangelog.com/</a> format.</h4>
 
 ---
 
@@ -43,7 +43,3 @@ var changelog = Changelog.Create();
 # Contributing
 
 Support this project with a ⭐️, report an issue or if you feel adventurous and would like to extend the functionality open a pull request.
-
-# License
-
-[MIT](https://github.com/sandrofigo/KeepAChangelog.IO/blob/main/LICENSE)
