@@ -21,14 +21,41 @@ public class Changelog
 {
     private const string TitleSymbol = "# ";
 
-    private const string DefaultChangelogTitle = "Changelog";
+    private const string DefaultTitle = "Changelog";
 
-    private const string DefaultChangelogDescription = """
-                                                       All notable changes to this project will be documented in this file.
+    /// <summary>
+    /// Description text from https://keepachangelog.com/
+    /// <para/>
+    /// https://github.com/olivierlacan/keep-a-changelog/blob/main/LICENSE
+    /// <para/>
+    /// The MIT License (MIT)
+    /// <para/>
+    /// Copyright (c) 2014 Olivier Lacan
+    /// <para/>
+    /// Permission is hereby granted, free of charge, to any person obtaining a copy
+    /// of this software and associated documentation files (the "Software"), to deal
+    /// in the Software without restriction, including without limitation the rights
+    /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    /// copies of the Software, and to permit persons to whom the Software is
+    /// furnished to do so, subject to the following conditions:
+    /// <para/>
+    /// The above copyright notice and this permission notice shall be included in all
+    /// copies or substantial portions of the Software.
+    /// <para/>
+    /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    /// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    /// SOFTWARE.
+    /// </summary>
+    private const string DefaultDescription = """
+                                              All notable changes to this project will be documented in this file.
 
-                                                       The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-                                                       and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-                                                       """;
+                                              The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+                                              and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+                                              """;
 
     /// <summary>
     /// The title of the changelog, which appears at the top of the file.
@@ -62,8 +89,8 @@ public class Changelog
     {
         var changelog = new Changelog
         {
-            Title = DefaultChangelogTitle,
-            Description = DefaultChangelogDescription
+            Title = DefaultTitle,
+            Description = DefaultDescription
         };
         changelog.Releases.Add(new Release());
         return changelog;
