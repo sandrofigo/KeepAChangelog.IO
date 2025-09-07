@@ -1,0 +1,19 @@
+name: tests
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**/README.md'
+      - '**/CHANGELOG.md'
+      - '**/LICENSE'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: ./build.cmd Test
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
