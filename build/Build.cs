@@ -20,10 +20,14 @@ class Build : NukeBuild
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     [Solution] readonly Solution Solution;
+
     [GitRepository] readonly GitRepository GitRepository;
 
     Project KeepAChangelogProject => Solution.GetProject("KeepAChangelog.IO");
+
     readonly AbsolutePath PublishDirectory = RootDirectory / "publish";
+
+    SemanticVersion Version = new(0, 0, 1, "prerelease");
 
     Target Clean => _ => _
         .Executes(() =>
@@ -33,7 +37,7 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
             );
 
-            PublishDirectory.DeleteDirectory();
+            PublishDirectory.CreateOrCleanDirectory();
         });
 
     Target Restore => _ => _
@@ -71,33 +75,32 @@ class Build : NukeBuild
         .DependsOn(Compile)
         .Executes(() =>
         {
-            var version = new SemanticVersion(0, 0, 1, "prerelease");
-
             if (GitRepository.CurrentCommitHasVersionTag())
-                version = GitRepository.GetLatestVersionTagOnCurrentCommit();
+                Version = GitRepository.GetLatestVersionTagOnCurrentCommit();
 
-            Log.Information("Version {Version}", version);
+            Log.Information("Version {Version}", Version);
 
-            string fileVersion = $"{version.Major}.{version.Minor}.{version.Patch}.0";
+            string fileVersion = $"{Version.Major}.{Version.Minor}.{Version.Patch}.0";
             Log.Information("File Version {FileVersion}", fileVersion);
 
-            string assemblyVersion = $"{version.Major}.0.0.0";
+            string assemblyVersion = $"{Version.Major}.0.0.0";
             Log.Information("Assembly Version {AssemblyVersion}", assemblyVersion);
 
-            string informationalVersion = version.ToFullString();
+            string informationalVersion = Version.ToFullString();
             Log.Information("Informational Version {InformationalVersion}", informationalVersion);
 
             DotNetTasks.DotNetPack(s => s
                 .SetProject(KeepAChangelogProject)
                 .SetConfiguration(Configuration)
                 .SetOutputDirectory(PublishDirectory)
-                .SetVersion(version.ToString())
+                .SetVersion(Version.ToString())
                 .SetFileVersion(fileVersion)
                 .SetAssemblyVersion(assemblyVersion)
                 .SetInformationalVersion(informationalVersion)
                 .EnableDeterministic()
                 .EnableContinuousIntegrationBuild()
+                .SetCopyright($"Copyright {DateTime.UtcNow.Year} (c) Sandro Figo")
                 .EnableNoRestore()
-                .EnableNoBuild());
+            );
         });
 }
