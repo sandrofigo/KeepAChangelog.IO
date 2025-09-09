@@ -4,6 +4,34 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+
+    <PackageId>KeepAChangelog.IO</PackageId>
+    <Authors>Sandro Figo</Authors>
+    <Title>KeepAChangelog.IO</Title>
+    <Description>A .NET library for reading and writing files in the https://keepachangelog.com/ format.</Description>
+    <PackageTags>changelog parser reader writer keepachangelog markdown</PackageTags>
+    <PackageIcon>KeepAChangelog.IO.png</PackageIcon>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageProjectUrl>https://github.com/sandrofigo/KeepAChangelog.IO</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sandrofigo/KeepAChangelog.IO</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\.github\assets\KeepAChangelog.IO.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
 </Project>

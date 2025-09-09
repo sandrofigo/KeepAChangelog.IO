@@ -1,13 +1,14 @@
 using System;
-using System.Linq;
+using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Execution;
+using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Utilities.Collections;
+using Serilog;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.PathConstruction;
 
@@ -18,8 +19,11 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    [Solution]
-    readonly Solution Solution;
+    [Solution] readonly Solution Solution;
+    [GitRepository] readonly GitRepository GitRepository;
+
+    Project KeepAChangelogProject => Solution.GetProject("KeepAChangelog.IO");
+    readonly AbsolutePath PublishDirectory = RootDirectory / "publish";
 
     Target Clean => _ => _
         .Executes(() =>
@@ -28,6 +32,8 @@ class Build : NukeBuild
                 .SetProject(Solution)
                 .SetConfiguration(Configuration)
             );
+
+            PublishDirectory.DeleteDirectory();
         });
 
     Target Restore => _ => _
@@ -59,5 +65,39 @@ class Build : NukeBuild
                 .SetConfiguration(Configuration)
                 .EnableNoBuild()
             );
+        });
+
+    Target Pack => _ => _
+        .DependsOn(Compile)
+        .Executes(() =>
+        {
+            var version = new SemanticVersion(0, 0, 1, "prerelease");
+
+            if (GitRepository.CurrentCommitHasVersionTag())
+                version = GitRepository.GetLatestVersionTagOnCurrentCommit();
+
+            Log.Information("Version {Version}", version);
+
+            string fileVersion = $"{version.Major}.{version.Minor}.{version.Patch}.0";
+            Log.Information("File Version {FileVersion}", fileVersion);
+
+            string assemblyVersion = $"{version.Major}.0.0.0";
+            Log.Information("Assembly Version {AssemblyVersion}", assemblyVersion);
+
+            string informationalVersion = version.ToFullString();
+            Log.Information("Informational Version {InformationalVersion}", informationalVersion);
+
+            DotNetTasks.DotNetPack(s => s
+                .SetProject(KeepAChangelogProject)
+                .SetConfiguration(Configuration)
+                .SetOutputDirectory(PublishDirectory)
+                .SetVersion(version.ToString())
+                .SetFileVersion(fileVersion)
+                .SetAssemblyVersion(assemblyVersion)
+                .SetInformationalVersion(informationalVersion)
+                .EnableDeterministic()
+                .EnableContinuousIntegrationBuild()
+                .EnableNoRestore()
+                .EnableNoBuild());
         });
 }
