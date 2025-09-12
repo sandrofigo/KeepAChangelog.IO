@@ -47,4 +47,6 @@ public class ChangelogTests
         Changelog changelog = Changelog.FromFile("Data/valid_changelog_with_random_version_order.txt");
         return Verify(changelog.ToString()).UseFileName("valid_changelog_with_random_version_order");
     }
+
+    // TODO-SFIGO: add test to check if custom exception is thrown when category name is not valid e.g. "Added123"
 }
