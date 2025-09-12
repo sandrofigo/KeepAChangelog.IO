@@ -26,7 +26,12 @@
       "enum": [
         "Clean",
         "Compile",
+        "FormatChangelog",
         "Pack",
+        "Publish",
+        "PublishGitHubRelease",
+        "PublishPackageToGithub",
+        "PublishPackageToNuGet",
         "Restore",
         "Test"
       ]
@@ -109,6 +114,11 @@
             "Debug",
             "Release"
           ]
+        },
+        "NuGetApiKey": {
+          "type": "string",
+          "description": "NuGet API Key",
+          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
         },
         "Solution": {
           "type": "string",

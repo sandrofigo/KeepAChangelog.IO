@@ -1,16 +1,25 @@
 using System;
+using System.IO;
+using System.Text;
+using KeepAChangelog.IO;
+using Microsoft.AspNetCore.StaticFiles;
 using NuGet.Versioning;
 using Nuke.Common;
 using Nuke.Common.CI;
+using Nuke.Common.CI.GitHubActions;
 using Nuke.Common.Execution;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.GitHub;
+using Octokit;
 using Serilog;
 using static Nuke.Common.EnvironmentInfo;
 using static Nuke.Common.IO.PathConstruction;
+using Project = Nuke.Common.ProjectModel.Project;
+using Release = Octokit.Release;
 
 class Build : NukeBuild
 {
@@ -23,9 +32,12 @@ class Build : NukeBuild
 
     [GitRepository] readonly GitRepository GitRepository;
 
+    [Parameter("NuGet API Key"), Secret] readonly string NuGetApiKey;
+
     Project KeepAChangelogProject => Solution.GetProject("KeepAChangelog.IO");
 
     readonly AbsolutePath PublishDirectory = RootDirectory / "publish";
+    readonly AbsolutePath ChangelogFile = RootDirectory / "CHANGELOG.md";
 
     SemanticVersion Version = new(0, 0, 1, "prerelease");
 
@@ -72,7 +84,7 @@ class Build : NukeBuild
         });
 
     Target Pack => _ => _
-        .DependsOn(Compile)
+        .DependsOn(Compile, Test)
         .Executes(() =>
         {
             if (GitRepository.CurrentCommitHasVersionTag())
@@ -103,4 +115,99 @@ class Build : NukeBuild
                 .EnableNoRestore()
             );
         });
+
+    Target PublishPackageToNuGet => _ => _
+        .DependsOn(Pack)
+        .Executes(() =>
+        {
+            foreach (AbsolutePath file in PublishDirectory.GlobFiles("*.nupkg"))
+            {
+                DotNetTasks.DotNetNuGetPush(s => s
+                    .SetTargetPath(file)
+                    .SetSource("https://api.nuget.org/v3/index.json")
+                    .SetApiKey(NuGetApiKey)
+                    .EnableSkipDuplicate()
+                );
+            }
+        });
+
+    Target PublishPackageToGithub => _ => _
+        .DependsOn(Pack)
+        .After(PublishPackageToNuGet)
+        .Executes(() =>
+        {
+            foreach (AbsolutePath file in PublishDirectory.GlobFiles("*.nupkg"))
+            {
+                DotNetTasks.DotNetNuGetPush(s => s
+                    .SetTargetPath(file)
+                    .SetSource($"https://nuget.pkg.github.com/{GitHubActions.Instance.RepositoryOwner}/index.json")
+                    .SetApiKey(GitHubActions.Instance.Token)
+                    .EnableSkipDuplicate()
+                );
+            }
+        });
+
+    Target FormatChangelog => _ => _
+        .Executes(() =>
+        {
+            Changelog.FromFile(ChangelogFile).ToFile(ChangelogFile); // TODO-SFIGO: make it easier to format a changelog file
+            Log.Information("Successfully formatted CHANGELOG.md");
+        });
+
+    Target PublishGitHubRelease => _ => _
+        .DependsOn(Pack, FormatChangelog)
+        .After(PublishPackageToNuGet)
+        .Executes(async () =>
+        {
+            Changelog changelog = Changelog.FromFile(ChangelogFile);
+
+            var releaseBody = new StringBuilder();
+
+            releaseBody.AppendJoin(Environment.NewLine + Environment.NewLine, changelog.Releases[0].Categories); // TODO-SFIGO: make it easier to get sorted categories as a single string; CategoriesCollection class?
+
+            GitHubTasks.GitHubClient = new GitHubClient(new ProductHeaderValue("KeepAChangelog.IO"))
+            {
+                Credentials = new Credentials(GitHubActions.Instance.Token)
+            };
+
+            string owner = GitRepository.GetGitHubOwner();
+            string name = GitRepository.GetGitHubName();
+
+            SemanticVersion version = GitRepository.GetLatestVersionTagOnCurrentCommit();
+
+            var newRelease = new NewRelease($"v{version}")
+            {
+                Draft = true,
+                Name = $"v{version}",
+                Prerelease = version.IsPrerelease,
+                Body = releaseBody.ToString()
+            };
+
+            Release createdRelease = await GitHubTasks.GitHubClient.Repository.Release.Create(owner, name, newRelease);
+
+            foreach (AbsolutePath file in PublishDirectory.GlobFiles("*.nupkg"))
+            {
+                await using FileStream fileStream = File.OpenRead(file);
+
+                if (!new FileExtensionContentTypeProvider().TryGetContentType(file, out string contentType))
+                {
+                    contentType = "application/octet-stream";
+                }
+
+                var assetUpload = new ReleaseAssetUpload
+                {
+                    FileName = file.Name,
+                    ContentType = contentType,
+                    RawData = fileStream
+                };
+
+                await GitHubTasks.GitHubClient.Repository.Release.UploadAsset(createdRelease, assetUpload);
+            }
+
+            await GitHubTasks.GitHubClient.Repository.Release.Edit(owner, name, createdRelease.Id, new ReleaseUpdate { Draft = false });
+        });
+
+    Target Publish => _ => _
+        .Requires(() => GitRepository.CurrentCommitHasVersionTag())
+        .DependsOn(PublishPackageToNuGet, PublishPackageToGithub, PublishGitHubRelease);
 }
