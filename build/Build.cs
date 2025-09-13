@@ -72,8 +72,18 @@ class Build : NukeBuild
             );
         });
 
+    Target ValidateChangelog => _ => _
+        .Executes(() =>
+        {
+            var changelog = Changelog.FromFile(ChangelogFile);
+
+            Assert.True(ChangelogFile.ReadAllText() == changelog.ToString());
+            
+            Log.Information("CHANGELOG.md is valid");
+        });
+    
     Target Test => _ => _
-        .DependsOn(Compile)
+        .DependsOn(Compile, ValidateChangelog)
         .Executes(() =>
         {
             DotNetTasks.DotNetTest(s => s

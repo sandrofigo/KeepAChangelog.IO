@@ -33,7 +33,8 @@
         "PublishPackageToGithub",
         "PublishPackageToNuGet",
         "Restore",
-        "Test"
+        "Test",
+        "ValidateChangelog"
       ]
     },
     "Verbosity": {
