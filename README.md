@@ -4,7 +4,7 @@
 [![downloads](https://img.shields.io/nuget/dt/KeepAChangelog.IO?color=blue)](https://www.nuget.org/packages/KeepAChangelog.IO/)
 [![tests](https://github.com/sandrofigo/KeepAChangelog.IO/actions/workflows/test.yml/badge.svg)](https://github.com/sandrofigo/KeepAChangelog.IO/actions/workflows/test.yml)
 
-[![logo](https://github.com/sandrofigo/KeepAChangelog.IO/blob/main/.github/assets/KeepAChangelog.IO.png?raw=true)](https://github.com/sandrofigo/KeepAChangelog.IO)
+[![logo](https://raw.githubusercontent.com/sandrofigo/KeepAChangelog.IO/refs/heads/main/.github/assets/KeepAChangelog.IO.png)](https://github.com/sandrofigo/KeepAChangelog.IO)
 
 A .NET library for reading and writing files in the https://keepachangelog.com/ format.
 
