@@ -1,25 +1,12 @@
-<h1 align="center">
-  <img src="https://github.com/sandrofigo/KeepAChangelog.IO/blob/main/.github/assets/KeepAChangelog.IO.png?raw=true" alt="KeepAChangelog.IO">
-  <br>
-  KeepAChangelog.IO
-  <br>
-</h1>
+# KeepAChangelog.IO
 
-<h4 align="center">A .NET library for reading and writing files in the <a href="https://keepachangelog.com/" target="_blank">https://keepachangelog.com/</a> format.</h4>
+[![nuget](https://img.shields.io/nuget/v/KeepAChangelog.IO)](https://www.nuget.org/packages/KeepAChangelog.IO/)
+[![downloads](https://img.shields.io/nuget/dt/KeepAChangelog.IO?color=blue)](https://www.nuget.org/packages/KeepAChangelog.IO/)
+[![tests](https://github.com/sandrofigo/KeepAChangelog.IO/actions/workflows/test.yml/badge.svg)](https://github.com/sandrofigo/KeepAChangelog.IO/actions/workflows/test.yml)
 
-<p align="center">
-  <a href="https://www.nuget.org/packages/KeepAChangelog.IO/">
-    <img src="https://img.shields.io/nuget/v/KeepAChangelog.IO" alt="nuget">
-  </a>
-  <a href="https://www.nuget.org/packages/KeepAChangelog.IO/">
-    <img src="https://img.shields.io/nuget/dt/KeepAChangelog.IO?color=blue" alt="downloads">
-  </a>
-  <a href="https://github.com/sandrofigo/KeepAChangelog.IO/actions/workflows/test.yml">
-    <img src="https://github.com/sandrofigo/KeepAChangelog.IO/actions/workflows/test.yml/badge.svg" alt="tests">
-  </a>
-</p>
+[![logo](https://github.com/sandrofigo/KeepAChangelog.IO/blob/main/.github/assets/KeepAChangelog.IO.png?raw=true)](https://github.com/sandrofigo/KeepAChangelog.IO)
 
----
+A .NET library for reading and writing files in the https://keepachangelog.com/ format.
 
 ## Features
 
