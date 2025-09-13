@@ -171,11 +171,11 @@ public class Changelog
                     {
                         string categoryName = line.Substring(Category.Symbol.Length, line.Length - Category.Symbol.Length).Trim().ToLowerInvariant();
 
-                        if (Enum.TryParse(categoryName, true, out EntryType entryType) && changelog.Releases.Count > 0)
+                        if (Enum.TryParse(categoryName, true, out CategoryType categoryType) && changelog.Releases.Count > 0)
                         {
                             lastAddedRelease.Categories.Add(new Category
                             {
-                                Type = entryType
+                                Type = categoryType
                             });
 
                             context = ParsingContext.Entry;

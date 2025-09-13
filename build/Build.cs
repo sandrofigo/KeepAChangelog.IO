@@ -160,7 +160,6 @@ class Build : NukeBuild
         .Executes(async () =>
         {
             Changelog changelog = Changelog.FromFile(ChangelogFile);
-
             var releaseBody = new StringBuilder();
 
             // TODO-SFIGO: add a way to get the unreleased release and the first released release

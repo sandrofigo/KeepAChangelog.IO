@@ -1,6 +1,6 @@
 ﻿namespace KeepAChangelog.IO;
 
-public enum EntryType
+public enum CategoryType
 {
     Added,
     Changed,

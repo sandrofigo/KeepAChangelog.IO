@@ -8,7 +8,7 @@ public record Category
 {
     internal const string Symbol = "### ";
 
-    public EntryType Type { get; set; }
+    public CategoryType Type { get; set; }
 
     public List<Entry> Entries { get; set; } = [];
 
