@@ -75,13 +75,13 @@ class Build : NukeBuild
     Target ValidateChangelog => _ => _
         .Executes(() =>
         {
-            var changelog = Changelog.FromFile(ChangelogFile);
+            Changelog changelog = Changelog.FromFile(ChangelogFile);
 
-            Assert.True(ChangelogFile.ReadAllText() == changelog.ToString());
-            
+            Assert.True(ChangelogFile.ReadAllText() == changelog.ToString()); // TODO-SFIGO: add method for validation
+
             Log.Information("CHANGELOG.md is valid");
         });
-    
+
     Target Test => _ => _
         .DependsOn(Compile, ValidateChangelog)
         .Executes(() =>
