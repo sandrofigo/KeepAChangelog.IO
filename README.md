@@ -21,9 +21,9 @@
 - ✍️ **Write** new changelogs or update existing ones  
 - ✅ **Validate** changelog formatting and structure
 
-# Usage
+## Usage
 
-## Read from a file
+### Read from a file
 
 ```csharp
 using KeepAChangelog.IO;
@@ -31,21 +31,17 @@ using KeepAChangelog.IO;
 var changelog = Changelog.From("CHANGELOG.md");
 ```
 
-## Write to a file
+### Write to a file
 ```csharp
-using KeepAChangelog.IO;
-
 changelog.ToFile("CHANGELOG.md");
 ```
 
-## Create a changelog from scratch
+### Create a changelog from scratch
 
 ```csharp
-using KeepAChangelog.IO;
-
 var changelog = Changelog.Create();
 ```
 
-# Contributing
+## Contributing
 
 Support this project with a ⭐️, open an issue or if you feel adventurous and would like to extend the functionality open a pull request.
