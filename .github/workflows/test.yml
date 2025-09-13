@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run tests
+      - name: Run pipeline
         run: ./build.cmd Test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
