@@ -8,6 +8,12 @@
 <h4 align="center">A .NET library for reading and writing files in the <a href="https://keepachangelog.com/" target="_blank">https://keepachangelog.com/</a> format.</h4>
 
 <p align="center">
+  <a href="https://www.nuget.org/packages/KeepAChangelog.IO/">
+    <img src="https://img.shields.io/nuget/v/KeepAChangelog.IO" alt="nuget">
+  </a>
+  <a href="https://www.nuget.org/packages/KeepAChangelog.IO/">
+    <img src="https://img.shields.io/nuget/dt/KeepAChangelog.IO?color=blue" alt="downloads">
+  </a>
   <a href="https://github.com/sandrofigo/KeepAChangelog.IO/actions/workflows/test.yml">
     <img src="https://github.com/sandrofigo/KeepAChangelog.IO/actions/workflows/test.yml/badge.svg" alt="tests">
   </a>
