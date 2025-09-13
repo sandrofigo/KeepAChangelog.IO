@@ -48,4 +48,4 @@ var changelog = Changelog.Create();
 
 # Contributing
 
-Support this project with a ⭐️, report an issue or if you feel adventurous and would like to extend the functionality open a pull request.
+Support this project with a ⭐️, open an issue or if you feel adventurous and would like to extend the functionality open a pull request.
