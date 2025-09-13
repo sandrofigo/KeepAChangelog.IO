@@ -42,6 +42,17 @@ changelog.ToFile("CHANGELOG.md");
 var changelog = Changelog.Create();
 ```
 
+### Access different parts of the changelog
+
+```csharp
+using System.Linq;
+using KeepAChangelog.IO;
+
+var latestRelease = changelog.Releases[0];
+var latestFixes = latestRelease.Categories.First(c => c.Type == CategoryType.Fixed).Entries;
+// ...
+```
+
 ## Contributing
 
 Support this project with a ⭐️, open an issue or if you feel adventurous and would like to extend the functionality open a pull request.
