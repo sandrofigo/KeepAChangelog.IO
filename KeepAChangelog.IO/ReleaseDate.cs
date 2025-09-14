@@ -33,4 +33,9 @@ public record ReleaseDate(int Year, int Month, int Day) : IComparable<ReleaseDat
 
         return Day.CompareTo(other.Day);
     }
+
+    public DateTime ToDateTime()
+    {
+        return new DateTime(Year, Month, Day);
+    }
 }
