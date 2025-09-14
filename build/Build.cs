@@ -121,7 +121,7 @@ class Build : NukeBuild
                 .SetInformationalVersion(informationalVersion)
                 .EnableDeterministic()
                 .EnableContinuousIntegrationBuild()
-                .SetCopyright($"Copyright {DateTime.UtcNow.Year} (c) Sandro Figo")
+                .SetCopyright($"Copyright {DateTime.UtcNow.Year} © Sandro Figo")
                 .EnableNoRestore()
             );
         });
