@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KeepAChangelog.IO;
 
-public record Category
+public record Category // TODO-SFIGO: indexer mimicking dictionary to insert/update by type
 {
     internal const string Symbol = "### ";
 
