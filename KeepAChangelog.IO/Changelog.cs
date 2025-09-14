@@ -70,12 +70,12 @@ public class Changelog
     /// <summary>
     /// The list of releases in the changelog.
     /// </summary>
-    public readonly List<Release> Releases = [];
+    public List<Release> Releases = [];
 
     /// <summary>
     /// The list of version links at the bottom of the changelog.
     /// </summary>
-    public readonly List<VersionLink> VersionLinks = [];
+    public List<VersionLink> VersionLinks = [];
 
     private Changelog()
     {
