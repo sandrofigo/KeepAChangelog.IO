@@ -38,4 +38,9 @@ public record ReleaseDate(int Year, int Month, int Day) : IComparable<ReleaseDat
     {
         return new DateTime(Year, Month, Day);
     }
+
+    public static ReleaseDate FromDateTime(DateTime dateTime)
+    {
+        return new ReleaseDate(dateTime.Year, dateTime.Month, dateTime.Day);
+    }
 }
