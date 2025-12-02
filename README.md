@@ -10,10 +10,10 @@ A .NET library for reading and writing files in the https://keepachangelog.com/ 
 
 ## Features
 
-- 📖 **Parse** changelog files into a strongly-typed model  
-- ✍️ **Write** new changelogs or update existing ones  
-- ✅ **Validate** changelog formatting and structure
-- ⛓️‍💥 **Zero** dependencies
+- Parse changelog files into a strongly-typed model  
+- Write new changelogs or update existing ones  
+- Validate changelog formatting and structure
+- Zero dependencies
 
 ## Usage
 
