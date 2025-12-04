@@ -106,6 +106,15 @@ public class Changelog
         return Parse(lines);
     }
 
+    /// <summary>
+    /// Reads a changelog from the specified path, formats it and writes it back to the same path.
+    /// </summary>
+    public static void Format(string filePath)
+    {
+        Changelog changelog = FromFile(filePath);
+        changelog.ToFile(filePath);
+    }
+
     public static Changelog Parse(IEnumerable<string> lines)
     {
         var changelog = new Changelog();
