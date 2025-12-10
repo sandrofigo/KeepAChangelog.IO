@@ -160,7 +160,7 @@ class Build : NukeBuild
     Target FormatChangelog => _ => _
         .Executes(() =>
         {
-            Changelog.FromFile(ChangelogFile).ToFile(ChangelogFile); // TODO-SFIGO: make it easier to format a changelog file
+            Changelog.Format(ChangelogFile);
             Log.Information("Successfully formatted CHANGELOG.md");
         });
 
