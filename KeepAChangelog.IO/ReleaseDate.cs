@@ -43,4 +43,16 @@ public record ReleaseDate(int Year, int Month, int Day) : IComparable<ReleaseDat
     {
         return new ReleaseDate(dateTime.Year, dateTime.Month, dateTime.Day);
     }
+
+#if NET8_0_OR_GREATER
+    public DateOnly ToDateOnly()
+    {
+        return new DateOnly(Year, Month, Day);
+    }
+
+    public static ReleaseDate FromDateOnly(DateOnly dateOnly)
+    {
+        return new ReleaseDate(dateOnly.Year, dateOnly.Month, dateOnly.Day);
+    }
+#endif
 }
