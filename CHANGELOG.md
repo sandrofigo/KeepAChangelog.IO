@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - `Changelog.Parse` now throws `ChangelogParseException` for unknown category names instead of ignoring them or throwing `ArgumentOutOfRangeException`
+- `Changelog.Parse` now throws `ChangelogParseException` for entries without a category heading instead of throwing `ArgumentOutOfRangeException`
 
 ### Fixed
 

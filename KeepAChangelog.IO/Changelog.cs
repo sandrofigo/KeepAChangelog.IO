@@ -206,6 +206,9 @@ public class Changelog
                     break;
                 case ParsingContext.Entry:
                     lastAddedRelease = changelog.Releases[changelog.Releases.Count - 1];
+                    if (lastAddedRelease.Categories.Count == 0)
+                        throw new ChangelogParseException($"Entry '{line.Trim()}' must be placed under a category heading (e.g. '{Category.Symbol}{CategoryType.Added}').", lineNumber);
+
                     Category lastAddedCategory = lastAddedRelease.Categories[lastAddedRelease.Categories.Count - 1];
                     if (IsEntry(line) && changelog.Releases.Count > 0 && lastAddedRelease.Categories.Count > 0)
                     {

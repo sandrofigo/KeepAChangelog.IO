@@ -111,6 +111,18 @@ public class ParseTests
         changelog.VersionLinks.ShouldHaveSingleItem().ShouldBe(new VersionLink { Version = "unreleased", Url = "https://example.com/compare/v1.0.0...HEAD" });
     }
 
+    [Fact]
+    public void Parse_EntryWithoutCategory_ThrowsChangelogParseException()
+    {
+        var exception = Should.Throw<ChangelogParseException>(() => ParseWithHeader(
+            "## [1.0.0] - 2025-01-01",
+            "",
+            "- x"));
+
+        exception.LineNumber.ShouldBe(Header.Length + 3);
+        exception.Message.ShouldContain("- x");
+    }
+
     [Theory]
     [InlineData("Added123")]
     [InlineData("1")]
