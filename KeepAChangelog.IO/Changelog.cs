@@ -123,8 +123,12 @@ public class Changelog
 
         var description = new StringBuilder();
 
+        var lineNumber = 0;
+
         foreach (string line in lines)
         {
+            lineNumber++;
+
             switch (context)
             {
                 case ParsingContext.Description when IsReleaseSection(line):
@@ -178,17 +182,19 @@ public class Changelog
                     lastAddedRelease = changelog.Releases[changelog.Releases.Count - 1];
                     if (IsCategory(line))
                     {
-                        string categoryName = line.Substring(Category.Symbol.Length, line.Length - Category.Symbol.Length).Trim().ToLowerInvariant();
+                        string categoryName = line.Substring(Category.Symbol.Length, line.Length - Category.Symbol.Length).Trim();
 
-                        if (Enum.TryParse(categoryName, true, out CategoryType categoryType) && changelog.Releases.Count > 0)
+                        // Match names only, since Enum.TryParse also accepts numeric values like "123"
+                        string? typeName = Enum.GetNames(typeof(CategoryType)).FirstOrDefault(name => string.Equals(name, categoryName, StringComparison.OrdinalIgnoreCase));
+                        if (typeName is null)
+                            throw new ChangelogParseException($"Unknown category '{categoryName}'. Valid categories are: {string.Join(", ", Enum.GetNames(typeof(CategoryType)))}.", lineNumber);
+
+                        lastAddedRelease.Categories.Add(new Category
                         {
-                            lastAddedRelease.Categories.Add(new Category
-                            {
-                                Type = categoryType
-                            });
+                            Type = (CategoryType)Enum.Parse(typeof(CategoryType), typeName)
+                        });
 
-                            context = ParsingContext.Entry;
-                        }
+                        context = ParsingContext.Entry;
                     }
 
                     break;

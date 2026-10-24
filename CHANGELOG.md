@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added `ToDateOnly` method to `ReleaseDate`
 - Added `FromDateOnly` method to `ReleaseDate`
+- Added `ChangelogParseException`
+
+### Changed
+
+- `Changelog.Parse` now throws `ChangelogParseException` for unknown category names instead of ignoring them or throwing `ArgumentOutOfRangeException`
 
 ## [1.2.0] - 2025-12-04
 
