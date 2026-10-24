@@ -67,6 +67,201 @@ public class ChangelogTests
         }
     }
 
+    [Theory]
+    [InlineData("Data/valid_changelog.verified.txt")]
+    [InlineData("Data/valid_changelog_without_version_links.verified.txt")]
+    [InlineData("Data/empty_changelog_from_code.verified.txt")]
+    [InlineData("Data/valid_changelog_with_random_category_order.txt")]
+    [InlineData("Data/valid_changelog_with_random_version_order.txt")]
+    public void IsValidFile_ParsableChangelog_ReturnsTrue(string filePath)
+    {
+        Changelog.IsValidFile(filePath).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void IsValid_UnformattedLines_ReturnsTrue()
+    {
+        Changelog.IsValid(
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [Unreleased]",
+            "",
+            "",
+            "### Added",
+            "",
+            "- A"
+        ]).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void IsValid_UnknownCategory_ReturnsFalse()
+    {
+        Changelog.IsValid(
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [Unreleased]",
+            "",
+            "### Unknown",
+            "",
+            "- A"
+        ]).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void IsValid_EntryWithoutCategory_ReturnsFalse()
+    {
+        Changelog.IsValid(
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [Unreleased]",
+            "",
+            "- A"
+        ]).ShouldBeFalse();
+    }
+
+    [Theory]
+    [InlineData("Data/valid_changelog.verified.txt")]
+    [InlineData("Data/valid_changelog_without_version_links.verified.txt")]
+    [InlineData("Data/empty_changelog_from_code.verified.txt")]
+    public void IsFormattedFile_FormattedChangelog_ReturnsTrue(string filePath)
+    {
+        Changelog.IsFormattedFile(filePath).ShouldBeTrue();
+    }
+
+    [Theory]
+    [InlineData("Data/valid_changelog_with_random_category_order.txt")]
+    [InlineData("Data/valid_changelog_with_random_version_order.txt")]
+    public void IsFormattedFile_UnorderedChangelog_ReturnsFalse(string filePath)
+    {
+        Changelog.IsFormattedFile(filePath).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void IsFormattedFile_AfterFormat_ReturnsTrue()
+    {
+        string path = Path.GetTempFileName();
+        try
+        {
+            File.Copy("Data/valid_changelog_with_random_version_order.txt", path, true);
+
+            Changelog.Format(path);
+
+            Changelog.IsFormattedFile(path).ShouldBeTrue();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Theory]
+    [InlineData("\n")]
+    [InlineData("\r\n")]
+    public void IsFormattedFile_AnyLineEnding_ReturnsTrue(string lineEnding)
+    {
+        string path = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(path, Changelog.Create().ToString().ReplaceLineEndings(lineEnding));
+
+            Changelog.IsFormattedFile(path).ShouldBeTrue();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void IsFormatted_CreatedChangelog_ReturnsTrue()
+    {
+        Changelog.IsFormatted(Changelog.Create().ToString().Split(Environment.NewLine)).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void IsFormatted_ExtraBlankLine_ReturnsFalse()
+    {
+        Changelog.IsFormatted(
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [Unreleased]",
+            "",
+            "",
+            "### Added",
+            "",
+            "- A"
+        ]).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void IsFormatted_UnorderedReleases_ReturnsFalse()
+    {
+        Changelog.IsFormatted(
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [1.0.0] - 2025-01-01",
+            "",
+            "### Added",
+            "",
+            "- A",
+            "",
+            "## [1.1.0] - 2025-02-01",
+            "",
+            "### Added",
+            "",
+            "- B"
+        ]).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void IsFormatted_InvalidChangelog_ReturnsFalse()
+    {
+        Changelog.IsFormatted(
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [Unreleased]",
+            "",
+            "### Unknown",
+            "",
+            "- A"
+        ]).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void IsFormatted_FormattedLines_ReturnsTrue()
+    {
+        Changelog.IsFormatted(
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [Unreleased]",
+            "",
+            "### Added",
+            "",
+            "- A"
+        ]).ShouldBeTrue();
+    }
+
     [Fact]
     public void ToFile_CreatedChangelog_RoundTrips()
     {

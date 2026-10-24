@@ -75,9 +75,7 @@ class Build : NukeBuild
     Target ValidateChangelog => _ => _
         .Executes(() =>
         {
-            Changelog changelog = Changelog.FromFile(ChangelogFile);
-
-            Assert.True(ChangelogFile.ReadAllText() == changelog.ToString()); // TODO-SFIGO: add method for validation
+            Assert.True(Changelog.IsFormattedFile(ChangelogFile), "CHANGELOG.md is not valid or not formatted, run the FormatChangelog target to fix it");
 
             Log.Information("CHANGELOG.md is valid");
         });

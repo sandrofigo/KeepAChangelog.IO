@@ -115,6 +115,67 @@ public class Changelog
         changelog.ToFile(filePath);
     }
 
+    /// <summary>
+    /// Checks whether the changelog file at the specified path can be parsed without errors.
+    /// The file does not need to be formatted, see <see cref="IsFormattedFile"/>.
+    /// </summary>
+    public static bool IsValidFile(string filePath)
+    {
+        string[] lines = File.ReadAllLines(filePath);
+
+        return IsValid(lines);
+    }
+
+    /// <summary>
+    /// Checks whether the specified changelog lines can be parsed without errors.
+    /// The lines do not need to be formatted, see <see cref="IsFormatted"/>.
+    /// </summary>
+    public static bool IsValid(IEnumerable<string> lines)
+    {
+        return TryParse(lines, out _);
+    }
+
+    /// <summary>
+    /// Checks whether the changelog file at the specified path is valid and already formatted,
+    /// i.e. formatting it would not change its content. Line ending differences are ignored.
+    /// </summary>
+    public static bool IsFormattedFile(string filePath)
+    {
+        string[] lines = File.ReadAllLines(filePath);
+
+        return IsFormatted(lines);
+    }
+
+    /// <summary>
+    /// Checks whether the specified changelog lines are valid and already formatted,
+    /// i.e. formatting them would produce the same lines.
+    /// </summary>
+    public static bool IsFormatted(IEnumerable<string> lines)
+    {
+        string[] originalLines = lines.ToArray();
+
+        if (!TryParse(originalLines, out Changelog? changelog))
+            return false;
+
+        string[] formattedLines = changelog!.ToString().Split(["\r\n", "\n"], StringSplitOptions.None);
+
+        return originalLines.SequenceEqual(formattedLines);
+    }
+
+    private static bool TryParse(IEnumerable<string> lines, out Changelog? changelog)
+    {
+        try
+        {
+            changelog = Parse(lines);
+            return true;
+        }
+        catch (ChangelogParseException)
+        {
+            changelog = null;
+            return false;
+        }
+    }
+
     public static Changelog Parse(IEnumerable<string> lines)
     {
         var changelog = new Changelog();

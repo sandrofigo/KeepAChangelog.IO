@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `ToDateOnly` method to `ReleaseDate`
 - Added `FromDateOnly` method to `ReleaseDate`
 - Added `ChangelogParseException`
+- Added `IsValid` method to `Changelog`
+- Added `IsValidFile` method to `Changelog`
+- Added `IsFormatted` method to `Changelog`
+- Added `IsFormattedFile` method to `Changelog`
 
 ### Changed
 
