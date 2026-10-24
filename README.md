@@ -22,7 +22,7 @@ A .NET library for reading and writing files in the https://keepachangelog.com/ 
 ```csharp
 using KeepAChangelog.IO;
 
-var changelog = Changelog.From("CHANGELOG.md");
+var changelog = Changelog.FromFile("CHANGELOG.md");
 ```
 
 ### Write to a file
