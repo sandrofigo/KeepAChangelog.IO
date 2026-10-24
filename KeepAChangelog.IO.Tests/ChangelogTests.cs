@@ -48,5 +48,38 @@ public class ChangelogTests
         return Verify(changelog.ToString()).UseFileName("valid_changelog_with_random_version_order");
     }
 
-    // TODO-SFIGO: add test to check if custom exception is thrown when category name is not valid e.g. "Added123"
+    [Fact]
+    public void Format_UnorderedFile_RewritesOrdered()
+    {
+        string path = Path.GetTempFileName();
+        try
+        {
+            File.Copy("Data/valid_changelog_with_random_version_order.txt", path, true);
+
+            Changelog.Format(path);
+
+            string expected = File.ReadAllText("Data/valid_changelog_with_random_version_order.verified.txt");
+            File.ReadAllText(path).ReplaceLineEndings().ShouldBe(expected.ReplaceLineEndings());
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void ToFile_CreatedChangelog_RoundTrips()
+    {
+        string path = Path.GetTempFileName();
+        try
+        {
+            Changelog.Create().ToFile(path);
+
+            Changelog.FromFile(path).ToString().ShouldBe(Changelog.Create().ToString());
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
 }
