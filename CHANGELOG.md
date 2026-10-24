@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed releases without categories swallowing the following release or version links when parsing
+- Fixed version sorting to compare numbers numerically (e.g. `1.10.0` > `1.9.0`), using semantic versioning precedence for semantic versions
 
 ## [1.2.0] - 2025-12-04
 

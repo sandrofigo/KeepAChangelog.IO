@@ -22,6 +22,6 @@ public record VersionLink : IComparable<VersionLink>
         if (other is null)
             return 1;
 
-        return string.Compare(Version, other.Version, StringComparison.Ordinal);
+        return VersionComparer.Compare(Version, other.Version);
     }
 }

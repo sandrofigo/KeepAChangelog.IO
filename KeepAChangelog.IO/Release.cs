@@ -70,7 +70,6 @@ public record Release : IComparable<Release>
         if (releaseDateComparison != 0)
             return releaseDateComparison;
 
-        int versionComparison = string.Compare(Version, other.Version, StringComparison.Ordinal);
-        return versionComparison;
+        return VersionComparer.Compare(Version, other.Version);
     }
 }
