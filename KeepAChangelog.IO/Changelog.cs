@@ -138,6 +138,12 @@ public class Changelog
                 case ParsingContext.EntryCategory when IsEntry(line):
                     context = ParsingContext.Entry;
                     break;
+                case ParsingContext.EntryCategory when IsReleaseSection(line):
+                    context = ParsingContext.ReleaseSection;
+                    break;
+                case ParsingContext.EntryCategory when IsVersionLink(line):
+                    context = ParsingContext.VersionLink;
+                    break;
                 case ParsingContext.Entry when IsCategory(line):
                     context = ParsingContext.EntryCategory;
                     break;

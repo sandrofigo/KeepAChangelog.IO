@@ -99,6 +99,18 @@ public class ParseTests
         changelog.Releases[1].Categories.ShouldHaveSingleItem().Type.ShouldBe(CategoryType.Added);
     }
 
+    [Fact]
+    public void Parse_EmptyReleaseFollowedByVersionLink_VersionLinkParsed()
+    {
+        Changelog changelog = ParseWithHeader(
+            "## [Unreleased]",
+            "",
+            "[unreleased]: https://example.com/compare/v1.0.0...HEAD");
+
+        changelog.Releases.ShouldHaveSingleItem().Categories.ShouldBeEmpty();
+        changelog.VersionLinks.ShouldHaveSingleItem().ShouldBe(new VersionLink { Version = "unreleased", Url = "https://example.com/compare/v1.0.0...HEAD" });
+    }
+
     [Theory]
     [InlineData("Added123")]
     [InlineData("1")]
