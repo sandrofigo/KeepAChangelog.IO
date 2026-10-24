@@ -158,7 +158,7 @@ class Build : NukeBuild
     Target FormatChangelog => _ => _
         .Executes(() =>
         {
-            Changelog.Format(ChangelogFile);
+            Changelog.FormatFile(ChangelogFile);
             Log.Information("Successfully formatted CHANGELOG.md");
         });
 

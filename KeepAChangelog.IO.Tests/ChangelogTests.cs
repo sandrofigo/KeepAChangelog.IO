@@ -49,14 +49,14 @@ public class ChangelogTests
     }
 
     [Fact]
-    public void Format_UnorderedFile_RewritesOrdered()
+    public void FormatFile_UnorderedFile_RewritesOrdered()
     {
         string path = Path.GetTempFileName();
         try
         {
             File.Copy("Data/valid_changelog_with_random_version_order.txt", path, true);
 
-            Changelog.Format(path);
+            Changelog.FormatFile(path);
 
             string expected = File.ReadAllText("Data/valid_changelog_with_random_version_order.verified.txt");
             File.ReadAllText(path).ReplaceLineEndings().ShouldBe(expected.ReplaceLineEndings());
@@ -153,7 +153,7 @@ public class ChangelogTests
         {
             File.Copy("Data/valid_changelog_with_random_version_order.txt", path, true);
 
-            Changelog.Format(path);
+            Changelog.FormatFile(path);
 
             Changelog.IsFormattedFile(path).ShouldBeTrue();
         }

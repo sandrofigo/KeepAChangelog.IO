@@ -21,7 +21,7 @@ The build is driven by NUKE (`build/Build.cs`); CI runs the same targets.
 - `Changelog.Parse` is a line-by-line state machine over `ParsingContext` (Title → Description → ReleaseSection → EntryCategory → Entry → VersionLink). Line types are recognized by markdown prefix constants defined on each model class (`Release.Symbol = "## "`, `Category.Symbol = "### "`, `Entry.Symbol`, `VersionLink.Symbol`). Continuation lines inside an entry are appended to the previous entry's text with a newline.
 - Serialization is done via `ToString()` overrides on each model (`Changelog`, `Release`, `Category`, `Entry`, `VersionLink`), joined with `Changelog.DoubleNewLine`. Writing **normalizes order**: releases sort descending via `Release.CompareTo` (Unreleased first, then by date, then version string), categories sort by `CategoryType` enum order, version links sort descending. `CategoryType` enum order therefore defines output order.
 - A release with `ReleaseDate == null` is "Unreleased". `ReleaseDate` is a custom type (not `DateTime`) with conversion helpers.
-- `ChangelogExtensions.ToFile` and `Changelog.Format` (parse + rewrite in place) are the file-writing entry points; `Changelog.Create()` produces the default template.
+- `ChangelogExtensions.ToFile` and `Changelog.FormatFile` (parse + rewrite in place) are the file-writing entry points; `Changelog.Create()` produces the default template.
 
 ## Testing
 

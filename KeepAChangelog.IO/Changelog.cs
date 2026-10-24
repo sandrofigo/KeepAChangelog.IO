@@ -109,7 +109,7 @@ public class Changelog
     /// <summary>
     /// Reads a changelog from the specified path, formats it and writes it back to the same path.
     /// </summary>
-    public static void Format(string filePath)
+    public static void FormatFile(string filePath)
     {
         Changelog changelog = FromFile(filePath);
         changelog.ToFile(filePath);
