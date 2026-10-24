@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-KeepAChangelog.IO is a zero-dependency .NET library (NuGet package) for parsing, writing and formatting changelogs in the https://keepachangelog.com/ format. The library targets `netstandard2.0;net8.0` with `LangVersion` latest and nullable enabled, so APIs that only exist on newer frameworks (e.g. `DateOnly`) need `#if NET8_0_OR_GREATER` guards (see `ReleaseDate.cs`). Keep the library free of runtime package dependencies.
+KeepAChangelog.IO is a zero-dependency .NET library (NuGet package) for parsing, writing and formatting changelogs in the https://keepachangelog.com/ format. The library targets `netstandard2.0;net10.0` with `LangVersion` latest and nullable enabled, so APIs that only exist on newer frameworks (e.g. `DateOnly`) need `#if NET8_0_OR_GREATER` guards (see `ReleaseDate.cs`). Keep the library free of runtime package dependencies.
 
 ## Commands
 
@@ -25,7 +25,7 @@ The build is driven by NUKE (`build/Build.cs`); CI runs the same targets.
 
 ## Testing
 
-Tests use xUnit v3 with Verify snapshot testing. Test inputs live in `KeepAChangelog.IO.Tests/Data/`; `*.verified.txt` files are both inputs and expected outputs for round-trip tests (parse → `ToString()` must reproduce the file exactly). When output changes intentionally, update the `.verified.txt` snapshots (Verify writes `.received.txt` files on mismatch).
+Tests use xUnit v3 with Verify snapshot testing, run through Microsoft.Testing.Platform (enabled in `global.json`, required on the .NET 10 SDK). Verify needs the `Verify_Sponsorship*` properties in the test csproj or the build fails with SC021; the OpenSource exemption is time-bounded and must be renewed before `Verify_SponsorshipExemptionUntil` passes (the build fails with SC049 after that month). `.gitattributes` forces `*.verified.txt` to LF; snapshots must match byte for byte, including no trailing newline. Test inputs live in `KeepAChangelog.IO.Tests/Data/`; `*.verified.txt` files are both inputs and expected outputs for round-trip tests (parse → `ToString()` must reproduce the file exactly). When output changes intentionally, update the `.verified.txt` snapshots (Verify writes `.received.txt` files on mismatch).
 
 ## Repository conventions
 
