@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-KeepAChangelog.IO is a zero-dependency .NET library (NuGet package) for parsing, writing and formatting changelogs in the https://keepachangelog.com/ format. The library targets `netstandard2.0;net10.0` with `LangVersion` latest and nullable enabled, so APIs that only exist on newer frameworks (e.g. `DateOnly`) need `#if NET8_0_OR_GREATER` guards (see `ReleaseDate.cs`). Keep the library free of runtime package dependencies.
+KeepAChangelog.IO is a zero-dependency .NET library (NuGet package) for parsing, writing and formatting changelogs in the https://keepachangelog.com/ format. The library targets `netstandard2.0;net8.0;net10.0` with `LangVersion` latest and nullable enabled, so APIs that only exist on newer frameworks (e.g. `DateOnly`) need `#if NET8_0_OR_GREATER` guards (see `ReleaseDate.cs`). Keep the library free of runtime package dependencies.
 
 ## Commands
 

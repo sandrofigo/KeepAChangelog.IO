@@ -9,8 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added `ToDateOnly` method to `ReleaseDate`
-- Added `FromDateOnly` method to `ReleaseDate`
+- Added `net8.0` and `net10.0` target frameworks
+- Added `ToDateOnly` method to `ReleaseDate` (`net8.0` and above)
+- Added `FromDateOnly` method to `ReleaseDate` (`net8.0` and above)
 - Added `ChangelogParseException`
 - Added `IsValid` method to `Changelog`
 - Added `IsValidFile` method to `Changelog`
@@ -19,8 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `GetUnreleased` method to `Changelog`
 - Added `GetLatestRelease` method to `Changelog`
 - Added `Parse` overload accepting a string to `Changelog`
-- Added `IsValid` overload accepting a string to `Changelog`
-- Added `IsFormatted` overload accepting a string to `Changelog`
 - Added `IComparable<Category>` implementation to `Category`
 
 ### Changed
