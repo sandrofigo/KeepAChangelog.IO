@@ -263,6 +263,72 @@ public class ChangelogTests
     }
 
     [Fact]
+    public void GetUnreleased_WithUnreleasedSection_ReturnsIt()
+    {
+        Changelog changelog = Changelog.FromFile("Data/valid_changelog_with_random_version_order.txt");
+
+        changelog.GetUnreleased().ShouldNotBeNull().IsUnreleased.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void GetUnreleased_WithoutUnreleasedSection_ReturnsNull()
+    {
+        Changelog changelog = Changelog.Parse(
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [1.0.0] - 2025-01-01",
+            "",
+            "### Added",
+            "",
+            "- A"
+        ]);
+
+        changelog.GetUnreleased().ShouldBeNull();
+    }
+
+    [Fact]
+    public void GetLatestRelease_IgnoresUnreleased_ReturnsNewestReleased()
+    {
+        Changelog changelog = Changelog.Parse(
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [Unreleased]",
+            "",
+            "### Added",
+            "",
+            "- B",
+            "",
+            "## [1.0.0] - 2025-01-01",
+            "",
+            "### Added",
+            "",
+            "- A"
+        ]);
+
+        changelog.GetLatestRelease().ShouldNotBeNull().Version.ShouldBe("1.0.0");
+    }
+
+    [Fact]
+    public void GetLatestRelease_ReleasesOutOfOrder_ReturnsNewest()
+    {
+        Changelog changelog = Changelog.FromFile("Data/valid_changelog_with_random_version_order.txt");
+
+        changelog.GetLatestRelease().ShouldNotBeNull().Version.ShouldBe("1.1.2");
+    }
+
+    [Fact]
+    public void GetLatestRelease_OnlyUnreleased_ReturnsNull()
+    {
+        Changelog.Create().GetLatestRelease().ShouldBeNull();
+    }
+
+    [Fact]
     public void ToFile_CreatedChangelog_RoundTrips()
     {
         string path = Path.GetTempFileName();

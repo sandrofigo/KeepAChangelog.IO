@@ -82,6 +82,24 @@ public class Changelog
     }
 
     /// <summary>
+    /// Returns the unreleased release (the one without a release date), or null if there is none.
+    /// </summary>
+    public Release? GetUnreleased()
+    {
+        return Releases.FirstOrDefault(release => release.IsUnreleased);
+    }
+
+    /// <summary>
+    /// Returns the most recent released release regardless of the order of <see cref="Releases"/>,
+    /// or null if there are no released releases. Uses the same ordering as when writing the changelog
+    /// (by release date, then by version).
+    /// </summary>
+    public Release? GetLatestRelease()
+    {
+        return Releases.Where(release => release.IsReleased).OrderByDescending(release => release).FirstOrDefault();
+    }
+
+    /// <summary>
     /// Creates an empty changelog with the default title and description and a single empty unreleased release.
     /// </summary>
     /// <returns></returns>

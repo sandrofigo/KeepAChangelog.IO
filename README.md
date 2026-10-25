@@ -42,7 +42,8 @@ var changelog = Changelog.Create();
 using System.Linq;
 using KeepAChangelog.IO;
 
-var latestRelease = changelog.Releases[0];
+var unreleased = changelog.GetUnreleased();
+var latestRelease = changelog.GetLatestRelease();
 var latestFixes = latestRelease.Categories.First(c => c.Type == CategoryType.Fixed).Entries;
 // ...
 ```

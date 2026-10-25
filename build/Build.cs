@@ -168,10 +168,10 @@ class Build : NukeBuild
         .Executes(async () =>
         {
             Changelog changelog = Changelog.FromFile(ChangelogFile);
+            KeepAChangelog.IO.Release latestRelease = changelog.GetLatestRelease() ?? throw new InvalidOperationException("CHANGELOG.md does not contain a release");
             var releaseBody = new StringBuilder();
 
-            // TODO-SFIGO: add a way to get the unreleased release and the first released release
-            releaseBody.AppendJoin(Environment.NewLine + Environment.NewLine, changelog.Releases[0].Categories); // TODO-SFIGO: make it easier to get sorted categories as a single string; CategoriesCollection class?
+            releaseBody.AppendJoin(Environment.NewLine + Environment.NewLine, latestRelease.Categories); // TODO-SFIGO: make it easier to get sorted categories as a single string; CategoriesCollection class?
 
             GitHubTasks.GitHubClient = new GitHubClient(new ProductHeaderValue("KeepAChangelog.IO"))
             {
