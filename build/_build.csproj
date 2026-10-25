@@ -14,7 +14,6 @@
   <!-- Specific packages referenced to get rid of warnings during NUKE build -->
   <ItemGroup>
     <PackageReference Include="NuGet.Packaging" Version="7.9.0" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.13" />
   </ItemGroup>
   
