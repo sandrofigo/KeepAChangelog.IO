@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `GetUnreleased` method to `Changelog`
 - Added `GetLatestRelease` method to `Changelog`
 - Added `Parse` overload accepting a string to `Changelog`
+- Added `IsValid` overload accepting a string to `Changelog`
+- Added `IsFormatted` overload accepting a string to `Changelog`
 
 ### Changed
 

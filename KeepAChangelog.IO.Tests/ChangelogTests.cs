@@ -82,50 +82,50 @@ public class ChangelogTests
     public void IsValid_UnformattedLines_ReturnsTrue()
     {
         Changelog.IsValid(
-        [
-            "# Changelog",
-            "",
-            "Description",
-            "",
-            "## [Unreleased]",
-            "",
-            "",
-            "### Added",
-            "",
-            "- A"
-        ]).ShouldBeTrue();
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+
+            ### Added
+
+            - A
+            """).ShouldBeTrue();
     }
 
     [Fact]
     public void IsValid_UnknownCategory_ReturnsFalse()
     {
         Changelog.IsValid(
-        [
-            "# Changelog",
-            "",
-            "Description",
-            "",
-            "## [Unreleased]",
-            "",
-            "### Unknown",
-            "",
-            "- A"
-        ]).ShouldBeFalse();
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+            ### Unknown
+
+            - A
+            """).ShouldBeFalse();
     }
 
     [Fact]
     public void IsValid_EntryWithoutCategory_ReturnsFalse()
     {
         Changelog.IsValid(
-        [
-            "# Changelog",
-            "",
-            "Description",
-            "",
-            "## [Unreleased]",
-            "",
-            "- A"
-        ]).ShouldBeFalse();
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+            - A
+            """).ShouldBeFalse();
     }
 
     [Theory]
@@ -184,65 +184,82 @@ public class ChangelogTests
     [Fact]
     public void IsFormatted_CreatedChangelog_ReturnsTrue()
     {
-        Changelog.IsFormatted(Changelog.Create().ToString().Split(Environment.NewLine)).ShouldBeTrue();
+        Changelog.IsFormatted(Changelog.Create().ToString()).ShouldBeTrue();
     }
 
     [Fact]
     public void IsFormatted_ExtraBlankLine_ReturnsFalse()
     {
         Changelog.IsFormatted(
-        [
-            "# Changelog",
-            "",
-            "Description",
-            "",
-            "## [Unreleased]",
-            "",
-            "",
-            "### Added",
-            "",
-            "- A"
-        ]).ShouldBeFalse();
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+
+            ### Added
+
+            - A
+            """).ShouldBeFalse();
     }
 
     [Fact]
     public void IsFormatted_UnorderedReleases_ReturnsFalse()
     {
         Changelog.IsFormatted(
-        [
-            "# Changelog",
-            "",
-            "Description",
-            "",
-            "## [1.0.0] - 2025-01-01",
-            "",
-            "### Added",
-            "",
-            "- A",
-            "",
-            "## [1.1.0] - 2025-02-01",
-            "",
-            "### Added",
-            "",
-            "- B"
-        ]).ShouldBeFalse();
+            """
+            # Changelog
+
+            Description
+
+            ## [1.0.0] - 2025-01-01
+
+            ### Added
+
+            - A
+
+            ## [1.1.0] - 2025-02-01
+
+            ### Added
+
+            - B
+            """).ShouldBeFalse();
     }
 
     [Fact]
     public void IsFormatted_InvalidChangelog_ReturnsFalse()
     {
         Changelog.IsFormatted(
-        [
-            "# Changelog",
-            "",
-            "Description",
-            "",
-            "## [Unreleased]",
-            "",
-            "### Unknown",
-            "",
-            "- A"
-        ]).ShouldBeFalse();
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+            ### Unknown
+
+            - A
+            """).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void IsFormatted_FormattedContent_ReturnsTrue()
+    {
+        Changelog.IsFormatted(
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+            ### Added
+
+            - A
+            """).ShouldBeTrue();
     }
 
     [Fact]
@@ -265,23 +282,24 @@ public class ChangelogTests
     [Fact]
     public void Parse_String_ParsesReleases()
     {
-        Changelog changelog = Changelog.Parse("""
-                               # Changelog
+        Changelog changelog = Changelog.Parse(
+            """
+            # Changelog
 
-                               Description
+            Description
 
-                               ## [Unreleased]
+            ## [Unreleased]
 
-                               ### Added
+            ### Added
 
-                               - A
+            - A
 
-                               ## [1.0.0] - 2025-01-01
+            ## [1.0.0] - 2025-01-01
 
-                               ### Fixed
+            ### Fixed
 
-                               - B
-                               """);
+            - B
+            """);
 
         changelog.Title.ShouldBe("Changelog");
         changelog.Releases.Select(release => release.Version).ShouldBe(["Unreleased", "1.0.0"]);
@@ -346,17 +364,17 @@ public class ChangelogTests
     public void GetUnreleased_WithoutUnreleasedSection_ReturnsNull()
     {
         Changelog changelog = Changelog.Parse(
-        [
-            "# Changelog",
-            "",
-            "Description",
-            "",
-            "## [1.0.0] - 2025-01-01",
-            "",
-            "### Added",
-            "",
-            "- A"
-        ]);
+            """
+            # Changelog
+
+            Description
+
+            ## [1.0.0] - 2025-01-01
+
+            ### Added
+
+            - A
+            """);
 
         changelog.GetUnreleased().ShouldBeNull();
     }
@@ -365,23 +383,23 @@ public class ChangelogTests
     public void GetLatestRelease_IgnoresUnreleased_ReturnsNewestReleased()
     {
         Changelog changelog = Changelog.Parse(
-        [
-            "# Changelog",
-            "",
-            "Description",
-            "",
-            "## [Unreleased]",
-            "",
-            "### Added",
-            "",
-            "- B",
-            "",
-            "## [1.0.0] - 2025-01-01",
-            "",
-            "### Added",
-            "",
-            "- A"
-        ]);
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+            ### Added
+
+            - B
+
+            ## [1.0.0] - 2025-01-01
+
+            ### Added
+
+            - A
+            """);
 
         changelog.GetLatestRelease().ShouldNotBeNull().Version.ShouldBe("1.0.0");
     }

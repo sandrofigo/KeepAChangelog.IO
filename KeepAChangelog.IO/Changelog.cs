@@ -146,11 +146,20 @@ public class Changelog
 
     /// <summary>
     /// Checks whether the specified changelog lines can be parsed without errors.
-    /// The lines do not need to be formatted, see <see cref="IsFormatted"/>.
+    /// The lines do not need to be formatted, see <see cref="IsFormatted(IEnumerable{string})"/>.
     /// </summary>
     public static bool IsValid(IEnumerable<string> lines)
     {
         return TryParse(lines, out _);
+    }
+
+    /// <summary>
+    /// Checks whether the specified changelog content can be parsed without errors.
+    /// The content does not need to be formatted, see <see cref="IsFormatted(string)"/>.
+    /// </summary>
+    public static bool IsValid(string content)
+    {
+        return IsValid(SplitLines(content));
     }
 
     /// <summary>
@@ -178,6 +187,15 @@ public class Changelog
         string[] formattedLines = SplitLines(changelog!.ToString());
 
         return originalLines.SequenceEqual(formattedLines);
+    }
+
+    /// <summary>
+    /// Checks whether the specified changelog content is valid and already formatted,
+    /// i.e. formatting it would not change its content. Line ending differences are ignored.
+    /// </summary>
+    public static bool IsFormatted(string content)
+    {
+        return IsFormatted(SplitLines(content));
     }
 
     private static bool TryParse(IEnumerable<string> lines, out Changelog? changelog)

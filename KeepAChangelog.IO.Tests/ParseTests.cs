@@ -2,19 +2,6 @@ namespace KeepAChangelog.IO.Tests;
 
 public class ParseTests
 {
-    private static readonly string[] Header =
-    [
-        "# Changelog",
-        "",
-        "Description",
-        ""
-    ];
-
-    private static Changelog ParseWithHeader(params string[] lines)
-    {
-        return Changelog.Parse([..Header, ..lines]);
-    }
-
     [Fact]
     public void Parse_ValidChangelog_ModelIsCorrect()
     {
@@ -45,12 +32,18 @@ public class ParseTests
     [Fact]
     public void Parse_CategoryNameCaseInsensitive_IsRecognized()
     {
-        Changelog changelog = ParseWithHeader(
-            "## [Unreleased]",
-            "",
-            "### added",
-            "",
-            "- A");
+        Changelog changelog = Changelog.Parse(
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+            ### added
+
+            - A
+            """);
 
         Category category = changelog.Releases[0].Categories.ShouldHaveSingleItem();
         category.Type.ShouldBe(CategoryType.Added);
@@ -60,13 +53,19 @@ public class ParseTests
     [Fact]
     public void Parse_NestedBulletInEntry_IsContinuation()
     {
-        Changelog changelog = ParseWithHeader(
-            "## [Unreleased]",
-            "",
-            "### Added",
-            "",
-            "- A",
-            "  - sub");
+        Changelog changelog = Changelog.Parse(
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+            ### Added
+
+            - A
+              - sub
+            """);
 
         Entry entry = changelog.Releases[0].Categories[0].Entries.ShouldHaveSingleItem();
         entry.Text.ShouldBe($"A{Environment.NewLine}- sub");
@@ -75,7 +74,13 @@ public class ParseTests
     [Fact]
     public void Parse_NoReleases_DescriptionIsEmpty()
     {
-        Changelog changelog = Changelog.Parse(Header);
+        Changelog changelog = Changelog.Parse(
+            """
+            # Changelog
+
+            Description
+
+            """);
 
         changelog.Title.ShouldBe("Changelog");
         changelog.Description.ShouldBe("");
@@ -85,14 +90,20 @@ public class ParseTests
     [Fact]
     public void Parse_EmptyReleaseFollowedByRelease_BothReleasesParsed()
     {
-        Changelog changelog = ParseWithHeader(
-            "## [Unreleased]",
-            "",
-            "## [1.0.0] - 2025-01-01",
-            "",
-            "### Added",
-            "",
-            "- A");
+        Changelog changelog = Changelog.Parse(
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+            ## [1.0.0] - 2025-01-01
+
+            ### Added
+
+            - A
+            """);
 
         changelog.Releases.Count.ShouldBe(2);
         changelog.Releases[0].Categories.ShouldBeEmpty();
@@ -102,10 +113,16 @@ public class ParseTests
     [Fact]
     public void Parse_EmptyReleaseFollowedByVersionLink_VersionLinkParsed()
     {
-        Changelog changelog = ParseWithHeader(
-            "## [Unreleased]",
-            "",
-            "[unreleased]: https://example.com/compare/v1.0.0...HEAD");
+        Changelog changelog = Changelog.Parse(
+            """
+            # Changelog
+
+            Description
+
+            ## [Unreleased]
+
+            [unreleased]: https://example.com/compare/v1.0.0...HEAD
+            """);
 
         changelog.Releases.ShouldHaveSingleItem().Categories.ShouldBeEmpty();
         changelog.VersionLinks.ShouldHaveSingleItem().ShouldBe(new VersionLink { Version = "unreleased", Url = "https://example.com/compare/v1.0.0...HEAD" });
@@ -114,12 +131,18 @@ public class ParseTests
     [Fact]
     public void Parse_EntryWithoutCategory_ThrowsChangelogParseException()
     {
-        var exception = Should.Throw<ChangelogParseException>(() => ParseWithHeader(
-            "## [1.0.0] - 2025-01-01",
-            "",
-            "- x"));
+        var exception = Should.Throw<ChangelogParseException>(() => Changelog.Parse(
+            """
+            # Changelog
 
-        exception.LineNumber.ShouldBe(Header.Length + 3);
+            Description
+
+            ## [1.0.0] - 2025-01-01
+
+            - x
+            """));
+
+        exception.LineNumber.ShouldBe(7);
         exception.Message.ShouldContain("- x");
     }
 
@@ -129,14 +152,20 @@ public class ParseTests
     [InlineData("Unknown")]
     public void Parse_InvalidCategoryName_ThrowsChangelogParseException(string categoryName)
     {
-        var exception = Should.Throw<ChangelogParseException>(() => ParseWithHeader(
-            "## [Unreleased]",
-            "",
-            $"### {categoryName}",
-            "",
-            "- x"));
+        var exception = Should.Throw<ChangelogParseException>(() => Changelog.Parse(
+            $"""
+             # Changelog
 
-        exception.LineNumber.ShouldBe(Header.Length + 3);
+             Description
+
+             ## [Unreleased]
+
+             ### {categoryName}
+
+             - x
+             """));
+
+        exception.LineNumber.ShouldBe(7);
         exception.Message.ShouldContain(categoryName);
     }
 }
