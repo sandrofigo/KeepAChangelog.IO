@@ -175,7 +175,7 @@ public class Changelog
         if (!TryParse(originalLines, out Changelog? changelog))
             return false;
 
-        string[] formattedLines = changelog!.ToString().Split(["\r\n", "\n"], StringSplitOptions.None);
+        string[] formattedLines = SplitLines(changelog!.ToString());
 
         return originalLines.SequenceEqual(formattedLines);
     }
@@ -192,6 +192,19 @@ public class Changelog
             changelog = null;
             return false;
         }
+    }
+
+    /// <summary>
+    /// Parses a changelog from its full text content. "\n", "\r\n" and "\r" line endings are supported, also mixed.
+    /// </summary>
+    public static Changelog Parse(string content)
+    {
+        return Parse(SplitLines(content));
+    }
+
+    private static string[] SplitLines(string content)
+    {
+        return content.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
     }
 
     public static Changelog Parse(IEnumerable<string> lines)

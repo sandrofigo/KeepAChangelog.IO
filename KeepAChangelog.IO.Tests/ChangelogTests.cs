@@ -263,6 +263,78 @@ public class ChangelogTests
     }
 
     [Fact]
+    public void Parse_String_ParsesReleases()
+    {
+        Changelog changelog = Changelog.Parse("""
+                               # Changelog
+
+                               Description
+
+                               ## [Unreleased]
+
+                               ### Added
+
+                               - A
+
+                               ## [1.0.0] - 2025-01-01
+
+                               ### Fixed
+
+                               - B
+                               """);
+
+        changelog.Title.ShouldBe("Changelog");
+        changelog.Releases.Select(release => release.Version).ShouldBe(["Unreleased", "1.0.0"]);
+    }
+
+    public static TheoryData<string[]> LineEndings =>
+    [
+        new[] { "\n" },
+        new[] { "\r\n" },
+        new[] { "\r" },
+        new[] { "\n", "\r\n" },
+        new[] { "\r\n", "\r" },
+        new[] { "\n", "\r" },
+        new[] { "\n", "\r\n", "\r" }
+    ];
+
+    [Theory]
+    [MemberData(nameof(LineEndings))]
+    public void Parse_StringWithLineEndings_IsSameAsParseLines(string[] lineEndings)
+    {
+        string[] lines =
+        [
+            "# Changelog",
+            "",
+            "Description",
+            "",
+            "## [Unreleased]",
+            "",
+            "### Added",
+            "",
+            "- A",
+            "  continued",
+            "- B",
+            "",
+            "## [1.0.0] - 2025-01-01",
+            "",
+            "### Fixed",
+            "",
+            "- C",
+            "",
+            "[unreleased]: https://example.com/compare/v1.0.0...HEAD"
+        ];
+
+        // Cycle through the line endings so mixed combinations alternate between lines
+        string content = string.Concat(lines.Select((line, i) => i == 0 ? line : lineEndings[(i - 1) % lineEndings.Length] + line));
+
+        Changelog changelog = Changelog.Parse(content);
+
+        changelog.ToString().ShouldBe(Changelog.Parse(lines).ToString());
+        changelog.Releases[0].Categories[0].Entries.Select(entry => entry.Text).ShouldBe(["A" + Environment.NewLine + "continued", "B"]);
+    }
+
+    [Fact]
     public void GetUnreleased_WithUnreleasedSection_ReturnsIt()
     {
         Changelog changelog = Changelog.FromFile("Data/valid_changelog_with_random_version_order.txt");
