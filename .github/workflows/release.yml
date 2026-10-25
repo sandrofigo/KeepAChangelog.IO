@@ -8,10 +8,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the GitHub release and upload assets
+      packages: write # push to GitHub Packages
+      id-token: write # GitHub OIDC token for NuGet trusted publishing
     steps:
       - uses: actions/checkout@v4
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
       - name: Run pipeline
         run: ./build.cmd Publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NuGetApiKey: ${{ secrets.NUGET_API_KEY }}
+          NuGetApiKey: ${{ steps.login.outputs.NUGET_API_KEY }}
