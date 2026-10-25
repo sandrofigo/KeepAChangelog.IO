@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using KeepAChangelog.IO;
 using Microsoft.AspNetCore.StaticFiles;
@@ -171,7 +172,7 @@ class Build : NukeBuild
             KeepAChangelog.IO.Release latestRelease = changelog.GetLatestRelease() ?? throw new InvalidOperationException("CHANGELOG.md does not contain a release");
             var releaseBody = new StringBuilder();
 
-            releaseBody.AppendJoin(Environment.NewLine + Environment.NewLine, latestRelease.Categories); // TODO-SFIGO: make it easier to get sorted categories as a single string; CategoriesCollection class?
+            releaseBody.AppendJoin(Environment.NewLine + Environment.NewLine, latestRelease.Categories.Order());
 
             GitHubTasks.GitHubClient = new GitHubClient(new ProductHeaderValue("KeepAChangelog.IO"))
             {

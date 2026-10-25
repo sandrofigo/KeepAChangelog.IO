@@ -4,7 +4,7 @@ using System.Text;
 
 namespace KeepAChangelog.IO;
 
-public record Category
+public record Category : IComparable<Category>
 {
     internal const string Symbol = "### ";
 
@@ -24,5 +24,16 @@ public record Category
         stringBuilder.Append(string.Join(Environment.NewLine, Entries));
 
         return stringBuilder.ToString();
+    }
+
+    public int CompareTo(Category? other)
+    {
+        if (ReferenceEquals(this, other))
+            return 0;
+
+        if (other is null)
+            return 1;
+
+        return Type.CompareTo(other.Type);
     }
 }

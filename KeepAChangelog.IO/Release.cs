@@ -44,7 +44,7 @@ public record Release : IComparable<Release>
         if (Categories.Count > 0)
             stringBuilder.Append(Changelog.DoubleNewLine);
 
-        stringBuilder.Append(string.Join(Changelog.DoubleNewLine, Categories.OrderBy(category => category.Type)));
+        stringBuilder.Append(string.Join(Changelog.DoubleNewLine, Categories.OrderBy(category => category)));
 
         return stringBuilder.ToString();
     }
