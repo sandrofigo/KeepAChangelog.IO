@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -119,9 +119,7 @@ public class Changelog
     /// </summary>
     public static Changelog FromFile(string filePath)
     {
-        string[] lines = File.ReadAllLines(filePath);
-
-        return Parse(lines);
+        return Parse(File.ReadAllText(filePath));
     }
 
     /// <summary>
@@ -139,9 +137,7 @@ public class Changelog
     /// </summary>
     public static bool IsValidFile(string filePath)
     {
-        string[] lines = File.ReadAllLines(filePath);
-
-        return IsValid(lines);
+        return IsValid(File.ReadAllText(filePath));
     }
 
     /// <summary>
@@ -168,9 +164,7 @@ public class Changelog
     /// </summary>
     public static bool IsFormattedFile(string filePath)
     {
-        string[] lines = File.ReadAllLines(filePath);
-
-        return IsFormatted(lines);
+        return IsFormatted(File.ReadAllText(filePath));
     }
 
     /// <summary>
