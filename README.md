@@ -154,7 +154,8 @@ Writing a changelog normalizes it:
 - Releases are sorted descending: `Unreleased` first, then by release date, then by version (using semantic versioning precedence for semantic versions)
 - Categories are sorted in the order `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`
 - Version links are sorted descending by version
-- Lines are separated with `Environment.NewLine` and the output has no trailing newline
+- Lines are separated with `Environment.NewLine`
+- The output ends with a single newline if the parsed content ended with one, and has no trailing newline otherwise (see `Changelog.TrailingNewLine`). A changelog created with `Changelog.Create()` has no trailing newline.
 
 Parsing has a few rules to be aware of:
 

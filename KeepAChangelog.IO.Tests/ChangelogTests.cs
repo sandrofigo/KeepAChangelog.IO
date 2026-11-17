@@ -433,4 +433,61 @@ public class ChangelogTests
             File.Delete(path);
         }
     }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData("\n")]
+    [InlineData("\r\n")]
+    public void FormatFile_TrailingNewLine_IsKeptAsIs(string ending)
+    {
+        string path = Path.GetTempFileName();
+        try
+        {
+            string content = Changelog.Create().ToString() + ending;
+            File.WriteAllText(path, content);
+
+            Changelog.FormatFile(path);
+
+            File.ReadAllText(path).ReplaceLineEndings().ShouldBe(content.ReplaceLineEndings());
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void Parse_TrailingNewLine_SetsTrailingNewLine()
+    {
+        Changelog.Parse(Changelog.Create().ToString()).TrailingNewLine.ShouldBeFalse();
+        Changelog.Parse(Changelog.Create().ToString() + "\n").TrailingNewLine.ShouldBeTrue();
+    }
+
+    [Fact]
+    public void IsFormatted_TrailingNewLine_ReturnsTrue()
+    {
+        Changelog.IsFormatted(Changelog.Create().ToString() + Environment.NewLine).ShouldBeTrue();
+    }
+
+    [Fact]
+    public void IsFormatted_MultipleTrailingNewLines_ReturnsFalse()
+    {
+        Changelog.IsFormatted(Changelog.Create().ToString() + "\n\n").ShouldBeFalse();
+    }
+
+    [Fact]
+    public void IsFormattedFile_MultipleTrailingNewLines_ReturnsFalse()
+    {
+        string path = Path.GetTempFileName();
+        try
+        {
+            File.WriteAllText(path, Changelog.Create().ToString() + "\n\n");
+
+            Changelog.IsFormattedFile(path).ShouldBeFalse();
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
 }

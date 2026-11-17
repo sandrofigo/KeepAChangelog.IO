@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -76,6 +76,12 @@ public class Changelog
     /// The list of version links at the bottom of the changelog.
     /// </summary>
     public List<VersionLink> VersionLinks = [];
+
+    /// <summary>
+    /// Whether the changelog ends with a newline when written. Parsing sets it when the content ends with a newline,
+    /// so formatting keeps a trailing newline if there is one, but doesn't add one.
+    /// </summary>
+    public bool TrailingNewLine { get; set; }
 
     private Changelog()
     {
@@ -229,9 +235,12 @@ public class Changelog
 
         var lineNumber = 0;
 
+        string? lastLine = null;
+
         foreach (string line in lines)
         {
             lineNumber++;
+            lastLine = line;
 
             switch (context)
             {
@@ -358,6 +367,9 @@ public class Changelog
             }
         }
 
+        // Content that ends with a newline has an empty last line after splitting
+        changelog.TrailingNewLine = lineNumber > 1 && lastLine?.Length == 0;
+
         return changelog;
     }
 
@@ -403,6 +415,9 @@ public class Changelog
             stringBuilder.Append(DoubleNewLine);
 
         stringBuilder.Append(string.Join(Environment.NewLine, VersionLinks.OrderByDescending(link => link)));
+
+        if (TrailingNewLine && !stringBuilder.ToString().EndsWith(Environment.NewLine))
+            stringBuilder.AppendLine();
 
         return stringBuilder.ToString();
     }
