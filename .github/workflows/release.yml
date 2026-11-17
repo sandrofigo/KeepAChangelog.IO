@@ -13,7 +13,7 @@ jobs:
       packages: write # push to GitHub Packages
       id-token: write # GitHub OIDC token for NuGet trusted publishing
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: NuGet login (OIDC → temp API key)
         uses: NuGet/login@v1
         id: login
