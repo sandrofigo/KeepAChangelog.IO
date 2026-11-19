@@ -308,9 +308,17 @@ public class Changelog
                         if (typeName is null)
                             throw new ChangelogParseException($"Unknown category '{categoryName}'. Valid categories are: {string.Join(", ", Enum.GetNames(typeof(CategoryType)))}.", lineNumber);
 
-                        lastAddedRelease.Categories.Add(new Category
+                        var categoryType = (CategoryType)Enum.Parse(typeof(CategoryType), typeName);
+
+                        // A category that appears more than once in a release is merged into the first one.
+                        // It is moved to the end of the list because entries are added to the last category.
+                        Category? existingCategory = lastAddedRelease.Categories.FirstOrDefault(category => category.Type == categoryType);
+                        if (existingCategory is not null)
+                            lastAddedRelease.Categories.Remove(existingCategory);
+
+                        lastAddedRelease.Categories.Add(existingCategory ?? new Category
                         {
-                            Type = (CategoryType)Enum.Parse(typeof(CategoryType), typeName)
+                            Type = categoryType
                         });
 
                         context = ParsingContext.Entry;

@@ -49,6 +49,33 @@ public class ChangelogTests
     }
 
     [Fact]
+    public Task ToString_ChangelogWithDuplicateCategories_CategoriesAreMerged()
+    {
+        Changelog changelog = Changelog.FromFile("Data/valid_changelog_with_duplicate_categories.txt");
+        return Verify(changelog.ToString()).UseFileName("valid_changelog_with_duplicate_categories");
+    }
+
+    [Fact]
+    public void Parse_ChangelogWithDuplicateCategories_AllEntriesAreParsed()
+    {
+        const string filePath = "Data/valid_changelog_with_duplicate_categories.txt";
+        Changelog changelog = Changelog.FromFile(filePath);
+
+        // Every entry line in the file must end up in the parsed changelog
+        int entryLineCount = File.ReadAllLines(filePath).Count(line => line.StartsWith("- "));
+        changelog.Releases.SelectMany(release => release.Categories).SelectMany(category => category.Entries).Count().ShouldBe(entryLineCount);
+
+        Release unreleased = changelog.GetUnreleased().ShouldNotBeNull();
+        unreleased.Categories.Count.ShouldBe(3);
+        unreleased.Categories.Single(category => category.Type == CategoryType.Added).Entries.Select(entry => entry.Text).ShouldBe(["Added 1", "Added 2", "Added 3", "Added 4" + Environment.NewLine + "continued"]);
+        unreleased.Categories.Single(category => category.Type == CategoryType.Removed).Entries.Select(entry => entry.Text).ShouldBe(["Removed 1"]);
+        unreleased.Categories.Single(category => category.Type == CategoryType.Fixed).Entries.Select(entry => entry.Text).ShouldBe(["Fixed 1"]);
+
+        Release release = changelog.GetLatestRelease().ShouldNotBeNull();
+        release.Categories.ShouldHaveSingleItem().Entries.Select(entry => entry.Text).ShouldBe(["Fixed 2", "Fixed 3"]);
+    }
+
+    [Fact]
     public void FormatFile_UnorderedFile_RewritesOrdered()
     {
         string path = Path.GetTempFileName();
@@ -73,6 +100,7 @@ public class ChangelogTests
     [InlineData("Data/empty_changelog_from_code.verified.txt")]
     [InlineData("Data/valid_changelog_with_random_category_order.txt")]
     [InlineData("Data/valid_changelog_with_random_version_order.txt")]
+    [InlineData("Data/valid_changelog_with_duplicate_categories.txt")]
     public void IsValidFile_ParsableChangelog_ReturnsTrue(string filePath)
     {
         Changelog.IsValidFile(filePath).ShouldBeTrue();
@@ -140,6 +168,7 @@ public class ChangelogTests
     [Theory]
     [InlineData("Data/valid_changelog_with_random_category_order.txt")]
     [InlineData("Data/valid_changelog_with_random_version_order.txt")]
+    [InlineData("Data/valid_changelog_with_duplicate_categories.txt")]
     public void IsFormattedFile_UnorderedChangelog_ReturnsFalse(string filePath)
     {
         Changelog.IsFormattedFile(filePath).ShouldBeFalse();
